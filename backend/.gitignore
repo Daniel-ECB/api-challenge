@@ -21,3 +21,6 @@ wheels/
 
 # Database files
 *.db
+
+# Jetbrains configuration files
+.idea/
