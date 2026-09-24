@@ -1,0 +1,23 @@
+from typing import Protocol
+from app.users.user_entity import UserEntity
+
+
+class UserRepositoryBase(Protocol):
+    async def get_users_list(self) -> list[UserEntity]: ...
+
+    async def get_user_by_id(self, user_id: int) -> UserEntity | None: ...
+
+    async def get_user_by_email(self, email: str) -> UserEntity | None: ...
+
+    async def get_user_by_username(self, username: str) -> UserEntity | None: ...
+
+    async def create_user(
+        self,
+        username: str,
+        email: str,
+        password_hash: str,
+    ) -> UserEntity: ...
+
+    async def update_user(self, user_update: UserEntity) -> UserEntity: ...
+
+    async def delete_user(self, user_id: int) -> None: ...
