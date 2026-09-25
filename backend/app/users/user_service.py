@@ -74,7 +74,7 @@ class UserService:
                 )
 
         if username is not None:
-            user.username = username
+            user.username = username.lower()
         if email is not None:
             user.email = email.lower()
 
