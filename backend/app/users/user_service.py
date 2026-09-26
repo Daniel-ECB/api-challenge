@@ -1,10 +1,12 @@
+from datetime import timedelta
 from typing import List
 
 from fastapi import HTTPException, status
 
+from app.core.config import settings
 from app.repositories.user_repository_base import UserRepositoryBase
 from app.users.user_entity import UserEntity
-from app.core.security import hash_password
+from app.core.security import hash_password, create_access_token
 
 
 class UserService:
@@ -25,6 +27,20 @@ class UserService:
             )
 
         return user
+
+
+    async def register_user(self, username: str, email: str, password: str) -> dict:
+        user = await self.create_user(username, email, password)
+
+        access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
+        access_token = create_access_token(
+            data={"sub": str(user.id)}, expires_delta=access_token_expires
+        )
+
+        return {
+            "user": user,
+            "token": {"access_token": access_token, "token_type": "bearer"}
+        }
 
 
     async def create_user(self, username: str, email: str, password: str) -> UserEntity:
