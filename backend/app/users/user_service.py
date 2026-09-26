@@ -63,7 +63,13 @@ class UserService:
         )
 
 
-    async def update_user(self, user_id: int, username: str | None, email: str | None) -> UserEntity:
+    async def update_user(self, current_user_id: int, user_id: int, username: str | None, email: str | None) -> UserEntity:
+        if user_id != current_user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Not authorized to update this user",
+            )
+
         user = await self.repository.get_user_by_id(user_id)
 
         if user is None:
@@ -99,7 +105,13 @@ class UserService:
         return user
 
 
-    async def delete_user(self, user_id: int) -> None:
+    async def delete_user(self, current_user_id: int, user_id: int) -> None:
+        if user_id != current_user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Not authorized to delete this user",
+            )
+
         user = await self.repository.get_user_by_id(user_id)
 
         if user is None:
