@@ -23,11 +23,22 @@ async def get_user(user_id: int, user_service: UserServiceDependency, current_us
 
 @router.post("", response_model=UserPrivate, status_code=status.HTTP_201_CREATED)
 async def create_user(user_in: UserCreate, user_service: UserServiceDependency, current_user: UserEntity = Depends(get_current_user)):
-    return await user_service.create_user(username=user_in.username, email=user_in.email, password=user_in.password)
+    return await user_service.create_user(
+        username=user_in.username,
+        email=user_in.email,
+        password=user_in.password,
+        pokemon_team=user_in.pokemon_team
+    )
 
 @router.patch("/{user_id}", response_model=UserPrivate)
 async def update_user(user_id: int, user_in: UserUpdate, user_service: UserServiceDependency, current_user: UserEntity = Depends(get_current_user)):
-    return await user_service.update_user(current_user_id=current_user.id, user_id=user_id, username=user_in.username, email=user_in.email)
+    return await user_service.update_user(
+        current_user_id=current_user.id,
+        user_id=user_id,
+        username=user_in.username,
+        email=user_in.email,
+        pokemon_team=user_in.pokemon_team
+    )
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(user_id: int, user_service: UserServiceDependency, current_user: UserEntity = Depends(get_current_user)):

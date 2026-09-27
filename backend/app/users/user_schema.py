@@ -8,12 +8,14 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str = Field(min_length=8)
+    pokemon_team: list[int] = Field(default_factory=list)
 
 
 class UserPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     username: str
+    pokemon_team: list[int]
 
 
 class UserPrivate(UserPublic):
@@ -23,3 +25,4 @@ class UserPrivate(UserPublic):
 class UserUpdate(BaseModel):
     username: str | None = Field(default=None, min_length=1, max_length=50)
     email: EmailStr | None = Field(default=None, max_length=120)
+    pokemon_team: list[int] | None = None

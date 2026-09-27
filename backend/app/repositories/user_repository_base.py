@@ -16,6 +16,7 @@ class UserRepositoryBase(Protocol):
         username: str,
         email: str,
         password_hash: str,
+        pokemon_team: list[int],
     ) -> UserEntity: ...
 
     async def update_user(self, user_update: UserEntity) -> UserEntity: ...

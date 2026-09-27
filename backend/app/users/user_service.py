@@ -29,8 +29,8 @@ class UserService:
         return user
 
 
-    async def register_user(self, username: str, email: str, password: str) -> dict:
-        user = await self.create_user(username, email, password)
+    async def register_user(self, username: str, email: str, password: str, pokemon_team: list[int]) -> dict:
+        user = await self.create_user(username, email, password, pokemon_team)
 
         access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
         access_token = create_access_token(
@@ -43,7 +43,7 @@ class UserService:
         }
 
 
-    async def create_user(self, username: str, email: str, password: str) -> UserEntity:
+    async def create_user(self, username: str, email: str, password: str, pokemon_team: list[int]) -> UserEntity:
         if await self.repository.get_user_by_email(email.lower()):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -59,11 +59,19 @@ class UserService:
         return await self.repository.create_user(
             username,
             email.lower(),
-            hash_password(password)
+            hash_password(password),
+            pokemon_team
         )
 
 
-    async def update_user(self, current_user_id: int, user_id: int, username: str | None, email: str | None) -> UserEntity:
+    async def update_user(
+            self,
+            current_user_id: int,
+            user_id: int,
+            username: str | None,
+            email: str | None,
+            pokemon_team: list[int] | None
+    ) -> UserEntity:
         if user_id != current_user_id:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -99,6 +107,8 @@ class UserService:
             user.username = username.lower()
         if email is not None:
             user.email = email.lower()
+        if pokemon_team is not None:
+            user.pokemon_team = pokemon_team
 
         await self.repository.update_user(user)
 

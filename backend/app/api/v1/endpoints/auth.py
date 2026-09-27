@@ -16,7 +16,12 @@ AuthServiceDependency = Annotated[AuthService, Depends(get_auth_service)]
 @router.post("/register", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
 async def register_user(user_in: UserCreate, user_service: UserServiceDependency):
     """Register a new user in the system using user_service."""
-    return await user_service.register_user(username=user_in.username, email=user_in.email, password=user_in.password)
+    return await user_service.register_user(
+        username=user_in.username,
+        email=user_in.email,
+        password=user_in.password,
+        pokemon_team=user_in.pokemon_team
+    )
 
 @router.post("/token", response_model=Token)
 async def login_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], auth_service: AuthServiceDependency):

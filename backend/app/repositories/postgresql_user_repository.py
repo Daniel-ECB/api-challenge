@@ -18,6 +18,7 @@ class PostgreSQLUserRepository(UserRepositoryBase):
             username=model.username,
             email=model.email,
             password_hash=model.password_hash,
+            pokemon_team=model.pokemon_team,
         )
 
 
@@ -63,11 +64,12 @@ class PostgreSQLUserRepository(UserRepositoryBase):
         return self._to_entity(user)
 
 
-    async def create_user(self, username: str, email: str, password_hash: str) -> UserEntity:
+    async def create_user(self, username: str, email: str, password_hash: str, pokemon_team: list[int]) -> UserEntity:
         new_user = UserModel(
             username=username.lower(),
             email=email.lower(),
             password_hash=password_hash,
+            pokemon_team=pokemon_team,
         )
 
         self._db.add(new_user)
@@ -86,6 +88,8 @@ class PostgreSQLUserRepository(UserRepositoryBase):
             user.username = user_update.username.lower()
         if user_update.email is not None:
             user.email = user_update.email.lower()
+        if user_update.pokemon_team is not None:
+            user.pokemon_team = user_update.pokemon_team
 
         await self._db.commit()
         await self._db.refresh(user)

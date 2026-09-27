@@ -28,12 +28,13 @@ class InMemoryUserRepository(UserRepositoryBase):
 
         return None
 
-    async def create_user(self, username: str, email: str, password_hash: str) -> UserEntity:
+    async def create_user(self, username: str, email: str, password_hash: str, pokemon_team: list[int]) -> UserEntity:
         user = UserEntity(
             id=self._next_id,
             username=username,
             email=email.lower(),
             password_hash=password_hash,
+            pokemon_team=pokemon_team,
         )
 
         self._users[user.id] = user
