@@ -10,8 +10,8 @@ router = APIRouter()
 UserServiceDependency = Annotated[UserService, Depends(get_user_service)]
 
 @router.get("/me", response_model=UserPrivate)
-async def read_current_user(current_user: UserEntity = Depends(get_current_user)):
-    return current_user
+async def read_current_user(user_service: UserServiceDependency, current_user: UserEntity = Depends(get_current_user)):
+    return await user_service.get_current_user_profile(user=current_user)
 
 @router.get("", response_model=list[UserPublic])
 async def get_users(user_service: UserServiceDependency, current_user: UserEntity = Depends(get_current_user)):

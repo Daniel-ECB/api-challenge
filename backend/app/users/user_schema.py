@@ -15,7 +15,7 @@ class UserPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     username: str
-    pokemon_team: list[int]
+    pokemon_team: list[str]
 
 
 class UserPrivate(UserPublic):
